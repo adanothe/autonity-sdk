@@ -1,0 +1,39 @@
+{
+  "name": "autonity-sdk",
+  "version": "0.0.7",
+  "description": "NPM package for interacting with the Autonity network",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "ts-node src/test/test.ts",
+    "type": "typechain --target ethers-v6 --out-dir src/typechain abi/*.json"
+  },
+  "keywords": [
+    "ethereum",
+    "ethers",
+    "smart contract",
+    "typescript",
+    "web3",
+    "sdk",
+    "blockchain"
+  ],
+  "author": "adanode",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adanothe/autonity-sdk.git"
+  },
+  "homepage": "https://github.com/adanothe/autonity-sdk#readme",
+  "dependencies": {
+    "ethers": "^6.13.2"
+  },
+  "devDependencies": {
+    "@typechain/ethers-v6": "^0.5.1",
+    "@types/node": "^18.16.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typechain": "^8.3.2",
+    "typescript": "^5.6.2"
+  }
+}
