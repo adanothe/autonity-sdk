@@ -27,9 +27,9 @@ Here’s an example of how to use the Autonity SDK in TypeScript and Node.js:
 import { Contract, utils } from 'autonity-sdk';
 
 // Initialize provider or signer
-const rpcUrl = utils.RPC; // can use custom RPC or the RPC from utils
-const contract = utils.AUTONITY_CONTRACT; // can use custom contract or the contract from the utils class
-const privateKey = 'your-private-key'; // Replace with the private key for wallet access
+// const rpcUrl = utils.RPC; // can use custom RPC or the RPC from utils
+// const contract = utils.AUTONITY_CONTRACT; // can use custom contract or the contract from the utils class
+// const privateKey = 'your-private-key'; // Replace with the private key for wallet access
 
 // Initialize the contract with the required parameters
 const contract = new Contract(); // default
@@ -53,9 +53,9 @@ contract.autonity.getCommittee()
 const { Contract, utils } = require('autonity-sdk');
 
 // Initialize provider or signer
-const rpcUrl = utils.RPC; // can use custom RPC or the RPC from utils
-const contract = utils.AUTONITY_CONTRACT; // can use custom contract or the contract from the utils class
-const privateKey = "your-private-key"; // Replace with the private key for wallet access
+// const rpcUrl = utils.RPC; // can use  custom RPC or the RPC from utils
+// const contract = utils.AUTONITY_CONTRACT; // can use custom contract or the contract from the utils class
+// const privateKey = "your-private-key"; // Replace with the private key for wallet access
 
 // Initialize the contract with the required parameters
 const contract = new Contract(); // default
