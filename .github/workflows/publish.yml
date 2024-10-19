@@ -24,7 +24,7 @@ jobs:
         run: npm install
 
       - name: Update version (patch)
-        run: npm patch
+        run: npm version patch
         env:
           CI: true
 
