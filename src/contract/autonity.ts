@@ -1,4 +1,4 @@
-import { initContract, AUTONITY_CONTRACT, defaultRpc } from "../utils/utils";
+import { Network, initContract, piccadilly, AUTONITY_CONTRACT } from "../utils";
 import { Autonity, Autonity__factory } from "../typechain";
 import { ethers } from "ethers";
 
@@ -130,15 +130,18 @@ const validatorEntity = (validator: ValidatorStruct): ValidatorInterface => ({
   state: VALIDATOR_STATE[Number(validator.state)] || "unknown",
 });
 
-
 export class Auton {
   private contract: Autonity;
   constructor(
-    rpcUrl: string = defaultRpc(),
+    networkOrRpcUrl: Network | string = piccadilly,
     contractAddress: string = AUTONITY_CONTRACT,
     privateKey?: string,
     signerOrProvider?: ethers.Wallet | ethers.JsonRpcProvider
   ) {
+    const rpcUrl =
+      typeof networkOrRpcUrl === "string"
+        ? networkOrRpcUrl
+        : networkOrRpcUrl.rpcUrl;
     this.contract = initContract(
       Autonity__factory,
       contractAddress,
@@ -148,7 +151,6 @@ export class Auton {
     );
   }
 
-  
   async activateValidator(
     _address: ethers.AddressLike
   ): Promise<ethers.ContractTransactionResponse> {
@@ -202,9 +204,8 @@ export class Auton {
       );
     }
   }
-  
 
-  async change_commission_rate(
+  async changeCommissionRate(
     _validator: ethers.AddressLike,
     _rate: ethers.BigNumberish
   ): Promise<ethers.ContractTransactionResponse> {
@@ -222,7 +223,7 @@ export class Auton {
     }
   }
 
-  async pause_validator(
+  async pauseValidator(
     _address: ethers.AddressLike
   ): Promise<ethers.ContractTransactionResponse> {
     try {
@@ -236,7 +237,7 @@ export class Auton {
     }
   }
 
-  async register_validator(
+  async registerValidator(
     _enode: string,
     _oracleAddress: ethers.AddressLike,
     _consensusKey: ethers.BytesLike,
@@ -258,7 +259,7 @@ export class Auton {
     }
   }
 
-  async update_enode(
+  async updateEnode(
     _nodeAddress: ethers.AddressLike,
     _enode: string
   ): Promise<ethers.ContractTransactionResponse> {
@@ -292,7 +293,6 @@ export class Auton {
         startBlock,
         endBlock
       );
-      
 
       return events.map((event) => ({
         validator: event.args?.validator,
@@ -499,7 +499,7 @@ export class Auton {
     }
   }
 
-  async commission_rate_precision(): Promise<bigint> {
+  async commissionRatePrecision(): Promise<bigint> {
     try {
       return await this.contract.COMMISSION_RATE_PRECISION();
     } catch (error) {
@@ -855,7 +855,6 @@ export class Auton {
     }
   }
 
-  
   async getValidator(_addr: ethers.AddressLike): Promise<ValidatorInterface> {
     try {
       const result: ValidatorStruct = await this.contract.getValidator(_addr);

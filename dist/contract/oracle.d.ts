@@ -1,3 +1,4 @@
+import { Network } from "../utils";
 import { ethers } from "ethers";
 interface RoundData {
     round: bigint;
@@ -12,7 +13,7 @@ interface VotingInfo {
 }
 export declare class oracle {
     private contract;
-    constructor(rpcUrl?: string, contractAddress?: string, privateKey?: string, signerOrProvider?: ethers.Wallet | ethers.JsonRpcProvider);
+    constructor(networkOrRpcUrl?: Network | string, contractAddress?: string, privateKey?: string, signerOrProvider?: ethers.Wallet | ethers.JsonRpcProvider);
     getPrecision(): Promise<bigint>;
     lastRoundBlock(): Promise<bigint>;
     getRound(): Promise<bigint>;

@@ -1,8 +1,9 @@
-import { Auton } from "./contract/autonity";
-import { oracle } from "./contract/oracle";
-import { initProviderOrSigner } from "./utils/utils";
+import { Auton, accountability, oracle, liquid } from "./contract";
+import { Network } from "./utils";
 export declare class Contract {
     autonity: Auton;
     oracle: oracle;
-    constructor(rpcUrl?: string, contractAddressAutonity?: string, contractAddressOracle?: string, privateKey?: string, signerOrProvider?: ReturnType<typeof initProviderOrSigner>);
+    accountability: accountability;
+    liquid: liquid;
+    constructor(networkOrRpcUrl?: Network | string, privateKey?: string, oracleContractAddress?: string, accountabilityContractAddress?: string, autonityContractAddress?: string, liquidContractAddress?: string);
 }

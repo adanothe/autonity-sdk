@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Auton = void 0;
-const utils_1 = require("../utils/utils");
+const utils_1 = require("../utils");
 const typechain_1 = require("../typechain");
 const VALIDATOR_STATE = {
     0: "active",
@@ -64,10 +64,12 @@ const validatorEntity = (validator) => ({
     state: VALIDATOR_STATE[Number(validator.state)] || "unknown",
 });
 class Auton {
-    constructor(rpcUrl = (0, utils_1.defaultRpc)(), contractAddress = utils_1.AUTONITY_CONTRACT, privateKey, signerOrProvider) {
+    constructor(networkOrRpcUrl = utils_1.piccadilly, contractAddress = utils_1.AUTONITY_CONTRACT, privateKey, signerOrProvider) {
+        const rpcUrl = typeof networkOrRpcUrl === "string"
+            ? networkOrRpcUrl
+            : networkOrRpcUrl.rpcUrl;
         this.contract = (0, utils_1.initContract)(typechain_1.Autonity__factory, contractAddress, rpcUrl, privateKey, signerOrProvider);
     }
-    // transaction methode
     async activateValidator(_address) {
         try {
             const transactionResponse = await this.contract.activateValidator(_address);
@@ -100,7 +102,7 @@ class Auton {
             throw new Error(`Failed to bond for ${_validator} ` + error.message);
         }
     }
-    async change_commission_rate(_validator, _rate) {
+    async changeCommissionRate(_validator, _rate) {
         try {
             const transactionResponse = await this.contract.changeCommissionRate(_validator, _rate);
             return transactionResponse;
@@ -110,7 +112,7 @@ class Auton {
             throw new Error(`Failed to change commission ${_validator} ` + error.message);
         }
     }
-    async pause_validator(_address) {
+    async pauseValidator(_address) {
         try {
             const txResponse = await this.contract.pauseValidator(_address);
             return txResponse;
@@ -120,7 +122,7 @@ class Auton {
             throw new Error(`Failed to pause validator ${_address} ` + error.message);
         }
     }
-    async register_validator(_enode, _oracleAddress, _consensusKey, _signatures) {
+    async registerValidator(_enode, _oracleAddress, _consensusKey, _signatures) {
         try {
             const txResponse = await this.contract.registerValidator(_enode, _oracleAddress, _consensusKey, _signatures);
             return txResponse;
@@ -130,7 +132,7 @@ class Auton {
             throw new Error(`Failed to register validator ` + error.message);
         }
     }
-    async update_enode(_nodeAddress, _enode) {
+    async updateEnode(_nodeAddress, _enode) {
         try {
             const txResponse = await this.contract.updateEnode(_nodeAddress, _enode);
             return txResponse;
@@ -286,7 +288,7 @@ class Auton {
                 error.message);
         }
     }
-    async commission_rate_precision() {
+    async commissionRatePrecision() {
         try {
             return await this.contract.COMMISSION_RATE_PRECISION();
         }
