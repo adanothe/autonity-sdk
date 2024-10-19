@@ -53,7 +53,7 @@ contract.autonity.getCommittee()
 const { Contract, Utils } = require('autonity-sdk');
 
 // Initialize provider or signer
-// const rpcUrl = Utils.RPC; // can use  custom RPC or the RPC from utils
+// const rpcUrl = Utils.RPC; // can use custom RPC or the RPC from utils
 // const contract = Utils.AUTONITY_CONTRACT; // can use custom contract or the contract from the utils class
 // const privateKey = "your-private-key"; // Replace with the private key for wallet access
 
@@ -63,7 +63,7 @@ const contract = new Contract(); // default
 // const contract = new Contract(rpcUrl, contract, privateKey); // if you want to use transaction functions
 
 // Example of calling the getCommittee function from the Autonity contract
-contract.autonity.getCommittee() // 
+contract.autonity.getCommittee() 
   .then(result => {
     console.log('Result from contract call:', result);
   })
