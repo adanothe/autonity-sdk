@@ -1,4 +1,4 @@
-import { initContract, ORACLE_CONTRACT, defaultRpc } from "../utils/utils";
+import { Network, initContract, ORACLE_CONTRACT, piccadilly } from "../utils";
 import { Oracle, IOracle, Oracle__factory } from "../typechain";
 import { ethers } from "ethers";
 
@@ -38,13 +38,16 @@ const votingInfoEntity = (data: IVotingInfoData): VotingInfo => ({
 
 export class oracle {
   private contract: Oracle;
-
   constructor(
-    rpcUrl: string = defaultRpc(),
+    networkOrRpcUrl: Network | string = piccadilly,
     contractAddress: string = ORACLE_CONTRACT,
     privateKey?: string,
     signerOrProvider?: ethers.Wallet | ethers.JsonRpcProvider
   ) {
+    const rpcUrl =
+      typeof networkOrRpcUrl === "string"
+        ? networkOrRpcUrl
+        : networkOrRpcUrl.rpcUrl;
     this.contract = initContract(
       Oracle__factory,
       contractAddress,
@@ -54,26 +57,21 @@ export class oracle {
     );
   }
 
-  // Fetch precision value
   async getPrecision(): Promise<bigint> {
     return await this.contract.getPrecision();
   }
 
-  // Fetch last round block
   async lastRoundBlock(): Promise<bigint> {
     return await this.contract.lastRoundBlock();
   }
 
-  // Fetch current round number
   async getRound(): Promise<bigint> {
     return await this.contract.getRound();
   }
 
-  // Fetch voting info for a specific address
   async votinginfo(address: string): Promise<VotingInfo> {
     const data: IVotingInfoData = await this.contract.votingInfo(address);
 
-    // Check if data exists, otherwise throw error
     if (!data) {
       throw new Error(`No voting info found for address ${address}`);
     }
@@ -81,7 +79,6 @@ export class oracle {
     return votingInfoEntity(data);
   }
 
-  // Fetch round data for a specific round and symbol
   async getRoundData(
     _round: ethers.BigNumberish,
     _symbol: string
@@ -92,7 +89,6 @@ export class oracle {
         _symbol
       );
 
-      // Check if data exists, otherwise throw error
       if (!data) {
         throw new Error(
           `No data found for round ${_round} and symbol ${_symbol}`
@@ -108,29 +104,24 @@ export class oracle {
     }
   }
 
-  // Fetch available symbols
   async getSymbols(): Promise<string[]> {
     return await this.contract.getSymbols();
   }
 
-  // Fetch voting period
   async getVotePeriod(): Promise<bigint> {
     return await this.contract.getVotePeriod();
   }
 
-  // Fetch list of voters
   async getVoters(): Promise<string[]> {
     return await this.contract.getVoters();
   }
 
-  // Fetch latest round data for a specific symbol
   async latestRoundData(_symbol: string): Promise<RoundData> {
     try {
       const data: IOracleRoundData = await this.contract.latestRoundData(
         _symbol
       );
 
-      // Check if data exists, otherwise throw error
       if (!data) {
         throw new Error(`No latest round data found for symbol ${_symbol}`);
       }

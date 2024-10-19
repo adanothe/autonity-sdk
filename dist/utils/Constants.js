@@ -1,0 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LIQUID_CONTARCT = exports.ACCOUNTABILITY_CONTRACT = exports.ORACLE_CONTRACT = exports.AUTONITY_CONTRACT = void 0;
+// Contract addresses for Autonity contracts
+exports.AUTONITY_CONTRACT = "0xBd770416a3345F91E4B34576cb804a576fa48EB1";
+exports.ORACLE_CONTRACT = "0x47e9Fbef8C83A1714F1951F142132E6e90F5fa5D";
+exports.ACCOUNTABILITY_CONTRACT = "0x5a443704dd4B594B382c22a083e2BD3090A6feF3";
+exports.LIQUID_CONTARCT = "0xC500751c4F96d49B954D20EAE42Fa29278B96beB";

@@ -1,2 +1,3 @@
-export * as utils from './utils/utils';
+import * as Utils from './utils';
+export { Utils };
 export { Contract } from './main';

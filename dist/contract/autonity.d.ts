@@ -1,3 +1,4 @@
+import { Network } from "../utils";
 import { ethers } from "ethers";
 interface ConfigInterface {
     policy: {
@@ -55,14 +56,14 @@ interface ValidatorInterface {
 }
 export declare class Auton {
     private contract;
-    constructor(rpcUrl?: string, contractAddress?: string, privateKey?: string, signerOrProvider?: ethers.Wallet | ethers.JsonRpcProvider);
+    constructor(networkOrRpcUrl?: Network | string, contractAddress?: string, privateKey?: string, signerOrProvider?: ethers.Wallet | ethers.JsonRpcProvider);
     activateValidator(_address: ethers.AddressLike): Promise<ethers.ContractTransactionResponse>;
     approve(spender: ethers.AddressLike, amount: ethers.BigNumberish): Promise<ethers.ContractTransactionResponse>;
     bond(_validator: ethers.AddressLike, _amount: ethers.BigNumberish): Promise<ethers.ContractTransactionResponse>;
-    change_commission_rate(_validator: ethers.AddressLike, _rate: ethers.BigNumberish): Promise<ethers.ContractTransactionResponse>;
-    pause_validator(_address: ethers.AddressLike): Promise<ethers.ContractTransactionResponse>;
-    register_validator(_enode: string, _oracleAddress: ethers.AddressLike, _consensusKey: ethers.BytesLike, _signatures: ethers.BytesLike): Promise<ethers.ContractTransactionResponse>;
-    update_enode(_nodeAddress: ethers.AddressLike, _enode: string): Promise<ethers.ContractTransactionResponse>;
+    changeCommissionRate(_validator: ethers.AddressLike, _rate: ethers.BigNumberish): Promise<ethers.ContractTransactionResponse>;
+    pauseValidator(_address: ethers.AddressLike): Promise<ethers.ContractTransactionResponse>;
+    registerValidator(_enode: string, _oracleAddress: ethers.AddressLike, _consensusKey: ethers.BytesLike, _signatures: ethers.BytesLike): Promise<ethers.ContractTransactionResponse>;
+    updateEnode(_nodeAddress: ethers.AddressLike, _enode: string): Promise<ethers.ContractTransactionResponse>;
     NewBondingRequest(startBlock?: number, endBlock?: number): Promise<{
         validator: string;
         delegator: string;
@@ -103,7 +104,7 @@ export declare class Auton {
     allowance(owner: ethers.AddressLike, spender: ethers.AddressLike): Promise<bigint>;
     atnTotal_redistributed(): Promise<bigint>;
     balanceOf(address: ethers.AddressLike): Promise<bigint>;
-    commission_rate_precision(): Promise<bigint>;
+    commissionRatePrecision(): Promise<bigint>;
     config(): Promise<ConfigInterface>;
     decimals(): Promise<bigint>;
     deployer(): Promise<string>;
