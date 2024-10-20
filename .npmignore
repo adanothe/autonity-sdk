@@ -1,3 +1,5 @@
+.github
+abi/
 src/
 *.log
 .DS_Store

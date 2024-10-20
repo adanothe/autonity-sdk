@@ -4,9 +4,14 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+    types: [closed]
 
 jobs:
   publish:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
     runs-on: ubuntu-latest
 
     steps:
@@ -22,23 +27,28 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # Configure Git identity
       - name: Configure Git identity
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
+      # Update versi patch
       - name: Update version (patch)
         run: npm version patch
         env:
           CI: true
 
+      - name: Auto commit version bump
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore(release): bump version after publish"
+          file_pattern: package.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Publish to NPM
       - name: Publish to NPM
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Push updated version back to repository
-        run: |
-          git add package.json
-          git commit -m "chore(release): bump version after publish"
-          git push origin HEAD:main

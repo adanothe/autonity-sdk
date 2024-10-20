@@ -1,4 +1,4 @@
-import { Auton, accountability, oracle, liquid } from "./contract"; // Import class-class contract
+import { Auton, accountability, oracle, liquid } from "./contract"; 
 import {
   Network,
   piccadilly,
@@ -6,7 +6,7 @@ import {
   ACCOUNTABILITY_CONTRACT,
   ORACLE_CONTRACT,
   LIQUID_CONTARCT,
-} from "./utils"; // Atau path yang sesuai
+} from "./utils"; 
 
 export class Contract {
   public autonity: Auton;
@@ -16,11 +16,11 @@ export class Contract {
 
   constructor(
     networkOrRpcUrl: Network | string = piccadilly,
+    liquidContractAddress: string = LIQUID_CONTARCT,
     privateKey?: string,
     oracleContractAddress: string = ORACLE_CONTRACT,
     accountabilityContractAddress: string = ACCOUNTABILITY_CONTRACT,
     autonityContractAddress: string = AUTONITY_CONTRACT,
-    liquidContractAddress: string = LIQUID_CONTARCT
   ) {
     const rpcUrl =
       typeof networkOrRpcUrl === "string"

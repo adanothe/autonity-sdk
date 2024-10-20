@@ -5,5 +5,5 @@ export declare class Contract {
     oracle: oracle;
     accountability: accountability;
     liquid: liquid;
-    constructor(networkOrRpcUrl?: Network | string, privateKey?: string, oracleContractAddress?: string, accountabilityContractAddress?: string, autonityContractAddress?: string, liquidContractAddress?: string);
+    constructor(networkOrRpcUrl?: Network | string, liquidContractAddress?: string, privateKey?: string, oracleContractAddress?: string, accountabilityContractAddress?: string, autonityContractAddress?: string);
 }

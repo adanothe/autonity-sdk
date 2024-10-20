@@ -18,7 +18,6 @@ export class Network {
   ) {}
 }
 
-// Inisialisasi jaringan Bakerloo
 export const bakerloo = new Network(
   65010003,
   "Autonity Bakerloo (Yamuna) Testnet",
@@ -26,7 +25,6 @@ export const bakerloo = new Network(
   new ethers.JsonRpcProvider("https://rpc1.bakerloo.autonity.org/")
 );
 
-// Inisialisasi jaringan Piccadilly
 export const piccadilly = new Network(
   65100003,
   "Autonity Piccadilly (Yamuna) Testnet",
