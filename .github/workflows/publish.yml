@@ -1,13 +1,17 @@
 name: Publish NPM Package
 
-# Workflow akan dijalankan setelah PR dari develop digabungkan ke main
 on:
   push:
     branches:
-      - main 
+      - main
+  pull_request:
+    branches:
+      - main
+    types: [closed]
 
 jobs:
   publish:
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop'
     runs-on: ubuntu-latest
 
     steps:
@@ -23,20 +27,23 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # Update versi patch
       - name: Update version (patch)
-        run: npm patch
+        run: npm version patch
         env:
           CI: true
 
+      # Commit dan push perubahan package.json setelah versi diperbarui
+      - name: Auto commit version bump
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore(release): bump version after publish"
+          file_pattern: package.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Publish ke NPM
       - name: Publish to NPM
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Push updated version back to repository
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add package.json
-          git commit -m "chore(release): bump version after publish"
-          git push origin HEAD:main
