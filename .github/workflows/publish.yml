@@ -27,13 +27,18 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # Configure Git identity
+      - name: Configure Git identity
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
       # Update versi patch
       - name: Update version (patch)
         run: npm version patch
         env:
           CI: true
 
-      # Commit dan push perubahan package.json setelah versi diperbarui
       - name: Auto commit version bump
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
@@ -42,7 +47,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Publish ke NPM
+      # Publish to NPM
       - name: Publish to NPM
         run: npm publish
         env:
