@@ -20,7 +20,5 @@ class Network {
     }
 }
 exports.Network = Network;
-// Inisialisasi jaringan Bakerloo
 exports.bakerloo = new Network(65010003, "Autonity Bakerloo (Yamuna) Testnet", "https://rpc1.bakerloo.autonity.org/", new ethers_1.ethers.JsonRpcProvider("https://rpc1.bakerloo.autonity.org/"));
-// Inisialisasi jaringan Piccadilly
 exports.piccadilly = new Network(65100003, "Autonity Piccadilly (Yamuna) Testnet", "https://rpc1.piccadilly.autonity.org/", new ethers_1.ethers.JsonRpcProvider("https://rpc1.piccadilly.autonity.org/"));

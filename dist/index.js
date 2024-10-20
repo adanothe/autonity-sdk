@@ -23,8 +23,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Contract = exports.Utils = void 0;
-const Utils = __importStar(require("./utils"));
-exports.Utils = Utils;
+exports.Contract = exports.utils = void 0;
+const utils = __importStar(require("./utils"));
+exports.utils = utils;
 var main_1 = require("./main");
 Object.defineProperty(exports, "Contract", { enumerable: true, get: function () { return main_1.Contract; } });

@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Contract = void 0;
-const contract_1 = require("./contract"); // Import class-class contract
-const utils_1 = require("./utils"); // Atau path yang sesuai
+const contract_1 = require("./contract");
+const utils_1 = require("./utils");
 class Contract {
-    constructor(networkOrRpcUrl = utils_1.piccadilly, privateKey, oracleContractAddress = utils_1.ORACLE_CONTRACT, accountabilityContractAddress = utils_1.ACCOUNTABILITY_CONTRACT, autonityContractAddress = utils_1.AUTONITY_CONTRACT, liquidContractAddress = utils_1.LIQUID_CONTARCT) {
+    constructor(networkOrRpcUrl = utils_1.piccadilly, liquidContractAddress = utils_1.LIQUID_CONTARCT, privateKey, oracleContractAddress = utils_1.ORACLE_CONTRACT, accountabilityContractAddress = utils_1.ACCOUNTABILITY_CONTRACT, autonityContractAddress = utils_1.AUTONITY_CONTRACT) {
         const rpcUrl = typeof networkOrRpcUrl === "string"
             ? networkOrRpcUrl
             : networkOrRpcUrl.rpcUrl;
