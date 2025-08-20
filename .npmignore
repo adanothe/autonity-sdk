@@ -1,0 +1,11 @@
+.github
+examples/
+abi/
+src/
+script/
+*.log
+.DS_Store
+node_modules/
+fetch.js
+test.ts
+autonity-event-model.ts

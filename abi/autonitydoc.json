@@ -1,0 +1,378 @@
+{
+  "events": {
+    "ActivatedValidator(address,address,uint256)": {
+      "params": {
+        "addr": "node address of the validator.",
+        "effectiveBlock": "the block number at which the new activated state takes effect",
+        "treasury": "treasury account"
+      }
+    },
+    "Approval(address,address,uint256)": {
+      "details": "Emitted when the allowance of a `spender` for an `owner` is set by a call to {approve}. `value` is the new allowance."
+    },
+    "BondingRejected(address,address,uint256,uint8)": {
+      "params": {
+        "amount": "The amount of NEWTON to be delegated.",
+        "delegator": "The caller.",
+        "state": "The current state of validator.",
+        "validator": "The validator node account."
+      }
+    },
+    "CallFailed(address,string,bytes)": {
+      "params": {
+        "methodSignature": "method signature of the call, empty in case of plain transaction",
+        "returnData": "low level return data",
+        "to": "address"
+      }
+    },
+    "CommissionRateChange(address,uint256)": {
+      "params": {
+        "rate": "new rate",
+        "validator": "validator address"
+      }
+    },
+    "ConfigUpdateAddress(string,address,address,uint256)": {
+      "params": {
+        "appliesAtHeight": "block at which the change will apply",
+        "name": "configuration name",
+        "newValue": "new value of configuration",
+        "oldValue": "old value of configuration"
+      }
+    },
+    "ConfigUpdateBool(string,bool,bool,uint256)": {
+      "params": {
+        "appliesAtHeight": "block at which the change will apply",
+        "name": "configuration name",
+        "newValue": "new value of configuration",
+        "oldValue": "old value of configuration"
+      }
+    },
+    "ConfigUpdateInt(string,int256,int256,uint256)": {
+      "params": {
+        "appliesAtHeight": "block at which the change will apply",
+        "name": "configuration name",
+        "newValue": "new value of configuration",
+        "oldValue": "old value of configuration"
+      }
+    },
+    "ConfigUpdateUint(string,uint256,uint256,uint256)": {
+      "params": {
+        "appliesAtHeight": "block at which the change will apply",
+        "name": "configuration name",
+        "newValue": "new value of configuration",
+        "oldValue": "old value of configuration"
+      }
+    },
+    "EnodeUpdate(address,string,string)": {
+      "params": {
+        "newEnode": "new enode of validator",
+        "oldEnode": "old enode of validator",
+        "validator": "validator address"
+      }
+    },
+    "EpochPeriodUpdated(uint256,uint256)": {
+      "params": {
+        "appliedAtBlock": "the block number at which the new value takes effect",
+        "period": "new epoch period in blocks"
+      }
+    },
+    "NewBondingRequest(address,address,address,bool,uint256,uint256)": {
+      "params": {
+        "amount": "The amount of NEWTON to be delegated.",
+        "caller": "The caller.",
+        "delegator": "The recipient of the bonding request.",
+        "headBondingID": "id of the request in bonding map",
+        "selfBonded": "True if the validator treasury initiated the request. No LNEW will be issued.",
+        "validator": "The validator node account."
+      }
+    },
+    "NewEpoch(uint256,uint256,uint256)": {
+      "params": {
+        "epoch": "epoch block number",
+        "inflationReserve": "total inflation reserves at the end of current epoch",
+        "stakeCirculating": "total ciculating stake  at the end of current epoch"
+      }
+    },
+    "NewUnbondingRequest(address,address,address,bool,uint256,uint256)": {
+      "params": {
+        "amount": "If self-bonded this is the requested amount of NEWTON to be unbonded.",
+        "caller": "The caller.",
+        "delegator": "The recipient of the unbonding request.",
+        "headUnbondingID": "id of the request in unbonding map",
+        "selfBonded": "True if the validator treasury initiated the request.",
+        "validator": "The validator node account."
+      }
+    },
+    "PausedValidator(address,address,uint256)": {
+      "params": {
+        "addr": "node address of the validator.",
+        "effectiveBlock": "the block number at which the new paused state takes effect",
+        "treasury": "treasury account"
+      }
+    },
+    "RegisteredValidator(address,address,address,string,address)": {
+      "params": {
+        "addr": "node address of the validator.",
+        "enode": "enode of validator",
+        "liquidStateContract": "liquidStateContract address",
+        "oracleAddress": "address of the oracle node run by validator",
+        "treasury": "treasury account"
+      }
+    },
+    "Rewarded(address,uint256,uint256,uint256,uint256)": {
+      "params": {
+        "addr": "node address of validator",
+        "atnDelegatedAmount": "delegator's atn rewards (includes validator commission)",
+        "atnSelfAmount": "validator's atn rewards",
+        "ntnDelegatedAmount": "delegator's ntn rewards (includes validator commission)",
+        "ntnSelfAmount": "validator's ntn rewards"
+      }
+    },
+    "Transfer(address,address,uint256)": {
+      "details": "Emitted when `value` tokens are moved from one account (`from`) to another (`to`). Note that `value` may be zero."
+    }
+  },
+  "kind": "dev",
+  "methods": {
+    "activateValidator(address)": {
+      "params": {
+        "_address": "address to be enabled."
+      }
+    },
+    "allowance(address,address)": {
+      "details": "See {IERC20-allowance}."
+    },
+    "approve(address,uint256)": {
+      "details": "See {IERC20-approve}. Requirements: - `spender` cannot be the zero address."
+    },
+    "autobond(address,uint256,uint256)": {
+      "details": "Bonds the inflation rewards to the validator's stake at epoch finalization. Restricted to protocol contracts."
+    },
+    "bond(address,uint256)": {
+      "params": {
+        "_amount": "total amount of NTN to bond.",
+        "_validator": "address of the validator to delegate stake to."
+      },
+      "returns": {
+        "_0": "uint256 id of the bonding request in the bonding queue"
+      }
+    },
+    "bondFrom(address,address,uint256)": {
+      "params": {
+        "_account": "address of the delegator.",
+        "_amount": "total amount of NTN to bond.",
+        "_validator": "address of the validator to delegate stake to."
+      },
+      "returns": {
+        "_0": "uint256 id of the bonding request in the bonding queue"
+      }
+    },
+    "changeCommissionRate(address,uint256)": {
+      "params": {
+        "_validator": "address to be enabled. _rate new commission rate, ranging between 0-10000 (10000 = 100%)."
+      }
+    },
+    "createSchedule(address,uint256,uint256,uint256)": {
+      "custom:restricted-to": "operator account",
+      "details": "Locked schedules do not contribute to circulating supply. So minted amount = `_amount` is subtracted from `stakeCirculating`.",
+      "params": {
+        "_amount": "total amount of the schedule",
+        "_startTime": "start time",
+        "_totalDuration": "total duration of the schedule"
+      }
+    },
+    "decimals()": {
+      "details": "ERC-20 Optional.",
+      "returns": {
+        "_0": "the number of decimals the NTN token uses."
+      }
+    },
+    "getEpochFromBlock(uint256)": {
+      "params": {
+        "_block": "the input block number."
+      }
+    },
+    "getMinimumBaseFee()": {
+      "details": "Autonity transaction's gas price must be greater or equal to the minimum gas price."
+    },
+    "getNewContract()": {
+      "returns": {
+        "_0": "`bytecode` the new contract bytecode.",
+        "_1": "`contractAbi` the new contract ABI."
+      }
+    },
+    "getSchedule(address,uint256)": {
+      "params": {
+        "_id": "index of the schedule",
+        "_vault": "address of the vault for the schedule"
+      }
+    },
+    "getTotalSchedules(address)": {
+      "params": {
+        "_vault": "address of the vault for the schedules"
+      }
+    },
+    "getUnbondingShare(uint256)": {
+      "params": {
+        "_unbondingID": "id of the unbonding request in unbonding queue"
+      }
+    },
+    "isUnbondingReleased(uint256)": {
+      "params": {
+        "_unbondingID": "id of the unbonding request in unbonding queue"
+      }
+    },
+    "jail(address,uint256,uint8)": {
+      "details": "jails the specified validator",
+      "params": {
+        "_jailtime": "the jailing time to be assigned to the validator",
+        "_newJailedState": "the validator state to be applied",
+        "_nodeAddress": "the node address of the validator to be jailed"
+      },
+      "returns": {
+        "_0": "uint256 the block at which the validator will be released from jail"
+      }
+    },
+    "jailbound(address,uint8)": {
+      "details": "jailbounds the specified validator",
+      "params": {
+        "_newJailboundState": "the validator state to be applied",
+        "_nodeAddress": "the node address of the validator to be jailbound"
+      }
+    },
+    "name()": {
+      "details": "ERC-20 Optional.",
+      "returns": {
+        "_0": "the name of the stake token."
+      }
+    },
+    "pauseValidator(address)": {
+      "details": "emit a {DisabledValidator} event.",
+      "params": {
+        "_address": "address to be disabled."
+      }
+    },
+    "registerValidator(string,address,bytes,bytes)": {
+      "details": "Emit a {RegisteredValidator} event.",
+      "params": {
+        "_consensusKey": "identifying the bls public key in bytes that the validator node is using.",
+        "_enode": "enode identifying the validator node.",
+        "_oracleAddress": "identifying the oracle server node that the validator is managing.",
+        "_signatures": "is a combination of two ecdsa signatures, and a bls signature as the ownership proof of the validator key appended sequentially. The 1st two ecdsa signatures are in below order: 1. a message containing treasury account and signed by validator account private key . 2. a message containing treasury account and signed by Oracle account private key ."
+      }
+    },
+    "setEip1559Params((uint256,uint256,uint256,uint256))": {
+      "params": {
+        "_params": ", eip1559 parameters: minBaseFee, gasLimitBoundDivisor, elasticityMultiplier and baseFeeChangeDenominator"
+      }
+    },
+    "setGasLimit(uint256)": {
+      "params": {
+        "_gasLimit": "Positive integer."
+      }
+    },
+    "setLiquidLogicContract(address)": {
+      "custom:restricted-to": "operator account"
+    },
+    "setMaxScheduleDuration(uint256)": {
+      "custom:restricted-to": "operator account"
+    },
+    "setOracleRewardRate(uint256)": {
+      "details": "Can only be called by an operator. Updates `config.policy.oracleRewardRate`.      - The reward rate must not exceed `STANDARD_SCALE_FACTOR` (100%).      - The proposer reward rate plus the oracle reward rate must not exceed 100%",
+      "params": {
+        "_oracleRewardRate": "The new reward rate for oracles (scaled by `STANDARD_SCALE_FACTOR`)."
+      }
+    },
+    "setProposerRewardRate(uint256)": {
+      "details": "Can only be called by an operator. Updates `config.policy.proposerRewardRate`.     - The reward rate must not exceed `STANDARD_SCALE_FACTOR` (100%).     - The proposer reward rate plus the oracle reward rate must not exceed 100%",
+      "params": {
+        "_proposerRewardRate": "The new reward rate for proposers (scaled by `STANDARD_SCALE_FACTOR`)."
+      }
+    },
+    "setUnbondingPeriod(uint256)": {
+      "details": "Can only be called by an operator. Updates `config.policy.unbondingPeriod`.",
+      "params": {
+        "_period": "The new unbonding period, in blocks."
+      }
+    },
+    "setWithheldRewardsPool(address)": {
+      "details": "Can only be called by an operator. Updates `config.policy.withheldRewardsPool`.      The provided address must not be the zero address.",
+      "params": {
+        "_pool": "The address of the withheld rewards pool."
+      }
+    },
+    "setWithholdingThreshold(uint256)": {
+      "details": "Can only be called by an operator. Updates `config.policy.withholdingThreshold`.      The threshold must not exceed `STANDARD_SCALE_FACTOR` (100%).",
+      "params": {
+        "_withholdingThreshold": "The new withholding threshold (scaled by `STANDARD_SCALE_FACTOR`)."
+      }
+    },
+    "slash(address,uint256)": {
+      "details": "slashes the specified validatorNOTE: 100% slash is not allowed and if attempted will cause a revert",
+      "params": {
+        "_nodeAddress": "the node address of the validator to be slashed",
+        "_slashingRate": "the rate for the slash"
+      },
+      "returns": {
+        "slashingAmount": "the slashing amount"
+      }
+    },
+    "slashAndJail(address,uint256,uint256,uint8,uint8)": {
+      "details": "slashes and jails the specified validator",
+      "params": {
+        "_jailtime": "the jailing time to be assigned to the validator",
+        "_newJailboundState": "the validator state to be applied in case of 100% slashing",
+        "_newJailedState": "the validator state to be applied for jailing",
+        "_nodeAddress": "the node address of the validator to be slashed",
+        "_slashingRate": "the rate to be used"
+      },
+      "returns": {
+        "isJailbound": "a flag that signals if the validator has been permanently jailed",
+        "jailReleaseBlock": "the block at which the validator will be released from jail",
+        "slashingAmount": "the amount slashed in NTN"
+      }
+    },
+    "symbol()": {
+      "details": "ERC-20 Optional.",
+      "returns": {
+        "_0": "the Stake token's symbol."
+      }
+    },
+    "transfer(address,uint256)": {
+      "details": "Emits a {Transfer} event. Implementation of {IERC20 transfer}",
+      "returns": {
+        "_0": "Returns a boolean value indicating whether the operation succeeded."
+      }
+    },
+    "transferFrom(address,address,uint256)": {
+      "details": "See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. Requirements: - `sender` and `recipient` must be allowed to hold stake. - `sender` must have a balance of at least `amount`. - the caller must have allowance for ``sender``'s tokens of at least `amount`."
+    },
+    "unbond(address,uint256)": {
+      "params": {
+        "_amount": "total amount of LNTN (or NTN if self delegated) to unbond.",
+        "_validator": "address of the validator to unbond stake to."
+      },
+      "returns": {
+        "_0": "uint256 id of the unbonding request in the unbonding queue"
+      }
+    },
+    "unbondFrom(address,address,uint256)": {
+      "params": {
+        "_account": "address of the delegator.",
+        "_amount": "total amount of LNTN (or NTN if self delegated) to unbond.",
+        "_validator": "address of the validator to unbond stake to."
+      },
+      "returns": {
+        "_0": "uint256 id of the unbonding request in the unbonding queue"
+      }
+    },
+    "updateEnode(address,string)": {
+      "params": {
+        "_enode": "new enode to be updated",
+        "_nodeAddress": "This identifies the validator you want to update"
+      }
+    }
+  },
+  "title": "Proof-of-Stake Autonity Contract ",
+  "version": 1
+}
