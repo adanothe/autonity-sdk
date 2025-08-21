@@ -1,3 +1,4 @@
-export * from './autonity-type';
-export * from './oracle-type';
-export * from './autonity-event-model';
+// Export the main namespaces
+export { AutonityTypes } from './autonity-type';
+export { AutonityEvents } from './autonity-event-model';
+export { OracleTypes } from './oracle-type';

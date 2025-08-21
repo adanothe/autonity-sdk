@@ -1,0 +1,54 @@
+title: Autonity SDK Documentation
+description: TypeScript SDK for interacting with the Autonity blockchain
+baseurl: "/autonity-sdk"
+url: "https://adanothe.github.io"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+theme: minima
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Navigation
+navigation:
+  - title: "Home"
+    url: "/"
+  - title: "API Reference"
+    url: "/api/"
+  - title: "Types"
+    url: "/types/"
+  - title: "Examples"
+    url: "/examples/"
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - script/
+  - src/
+
+# Include in processing
+include:
+  - docs/
+
+# Collections
+collections:
+  api:
+    output: true
+    permalink: /:collection/:name/
+  types:
+    output: true
+    permalink: /:collection/:name/
+  examples:
+    output: true
+    permalink: /:collection/:name/

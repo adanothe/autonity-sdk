@@ -1,0 +1,462 @@
+import { Autonity, Autonity__factory } from "../typechain";
+import { ethers, AddressLike, ContractTransactionResponse } from "ethers";
+import { AutonityTypes, AutonityEvents } from "../type";
+import { ContractClient } from "../core/contract-registry";
+
+export class AutonityClient implements ContractClient {
+  private contract: Autonity;
+
+  constructor(
+    provider: ethers.Provider,
+    contractAddress: string,
+    signer?: ethers.Signer
+  ) {
+    if (!provider) {
+      throw new Error("Provider is required");
+    }
+
+    if (!contractAddress || !ethers.isAddress(contractAddress)) {
+      throw new Error("Invalid contract address");
+    }
+
+    try {
+      this.contract = signer
+        ? Autonity__factory.connect(contractAddress, signer)
+        : Autonity__factory.connect(contractAddress, provider);
+    } catch (error) {
+      throw new Error(
+        `Failed to connect to Autonity contract: ${
+          error instanceof Error ? error.message : "Unknown error"
+        }`
+      );
+    }
+  }
+
+  async ActivatedValidator(
+    startBlock?: number,
+    endBlock?: number,
+    addr?: AddressLike
+  ): Promise<AutonityEvents.ActivatedValidator[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.ActivatedValidator(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map(AutonityEvents.mapActivatedValidator);
+    return addr
+      ? mappedEvents.filter(
+          (event) => event.addr.toLowerCase() === addr.toString().toLowerCase()
+        )
+      : mappedEvents;
+  }
+
+  async Approval(
+    startBlock?: number,
+    endBlock?: number,
+    owner?: AddressLike,
+    spender?: AddressLike
+  ): Promise<AutonityEvents.Approval[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.Approval(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map(AutonityEvents.mapApproval);
+    return mappedEvents.filter(
+      (event) =>
+        (!owner ||
+          event.owner.toLowerCase() === owner.toString().toLowerCase()) &&
+        (!spender ||
+          event.spender.toLowerCase() === spender.toString().toLowerCase())
+    );
+  }
+
+  async EnodeUpdate(
+    startBlock?: number,
+    endBlock?: number,
+    validator?: AddressLike
+  ): Promise<AutonityEvents.EnodeUpdate[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.EnodeUpdate(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map(AutonityEvents.mapEnodeUpdate);
+    return validator
+      ? mappedEvents.filter(
+          (event) =>
+            event.validator.toLowerCase() === validator.toString().toLowerCase()
+        )
+      : mappedEvents;
+  }
+
+  async NewBondingRequest(
+    startBlock?: number,
+    endBlock?: number,
+    validator?: AddressLike
+  ): Promise<AutonityEvents.NewBondingRequest[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.NewBondingRequest(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map(AutonityEvents.mapNewBondingRequest);
+    return validator
+      ? mappedEvents.filter(
+          (event) =>
+            event.validator.toLowerCase() === validator.toString().toLowerCase()
+        )
+      : mappedEvents;
+  }
+
+  async NewUnbondingRequest(
+    startBlock?: number,
+    endBlock?: number,
+    validator?: AddressLike
+  ): Promise<AutonityEvents.NewUnbondingRequest[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.NewUnbondingRequest(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map(AutonityEvents.mapNewUnbondingRequest);
+    return validator
+      ? mappedEvents.filter(
+          (event) =>
+            event.validator.toLowerCase() === validator.toString().toLowerCase()
+        )
+      : mappedEvents;
+  }
+
+  async MintedStake(
+    startBlock?: number,
+    endBlock?: number,
+    addr?: AddressLike
+  ): Promise<AutonityEvents.MintedStake[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.MintedStake(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map(AutonityEvents.mapMintedStake);
+    return addr
+      ? mappedEvents.filter(
+          (event) => event.addr.toLowerCase() === addr.toString().toLowerCase()
+        )
+      : mappedEvents;
+  }
+
+  async activateValidator(
+    _address: AddressLike
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.activateValidator(_address);
+  }
+
+  async pauseValidator(
+    _address: AddressLike
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.pauseValidator(_address);
+  }
+
+  async registerValidator(
+    _enode: string,
+    _oracleAddress: AddressLike,
+    _consensusKey: ethers.BytesLike,
+    _signatures: ethers.BytesLike
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.registerValidator(
+      _enode,
+      _oracleAddress,
+      _consensusKey,
+      _signatures
+    );
+  }
+
+  async changeCommissionRate(
+    _validator: AddressLike,
+    _rate: ethers.BigNumberish
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.changeCommissionRate(_validator, _rate);
+  }
+
+  async updateEnode(
+    _nodeAddress: AddressLike,
+    _enode: string
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.updateEnode(_nodeAddress, _enode);
+  }
+
+  async bond(
+    _validator: AddressLike,
+    _amount: ethers.BigNumberish
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.bond(_validator, _amount);
+  }
+
+  async bondFrom(
+    _account: AddressLike,
+    _validator: AddressLike,
+    _amount: ethers.BigNumberish
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.bondFrom(_account, _validator, _amount);
+  }
+
+  async unbond(
+    _validator: AddressLike,
+    _amount: ethers.BigNumberish
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.unbond(_validator, _amount);
+  }
+
+  async unbondFrom(
+    _account: AddressLike,
+    _validator: AddressLike,
+    _amount: ethers.BigNumberish
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.unbondFrom(_account, _validator, _amount);
+  }
+
+  async approveBonding(
+    _caller: AddressLike,
+    _amount: ethers.BigNumberish
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.approveBonding(_caller, _amount);
+  }
+
+  async approve(
+    spender: AddressLike,
+    amount: ethers.BigNumberish
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.approve(spender, amount);
+  }
+
+  async transfer(
+    _recipient: AddressLike,
+    _amount: ethers.BigNumberish
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.transfer(_recipient, _amount);
+  }
+
+  async transferFrom(
+    _sender: AddressLike,
+    _recipient: AddressLike,
+    _amount: ethers.BigNumberish
+  ): Promise<ContractTransactionResponse> {
+    return this.contract.transferFrom(_sender, _recipient, _amount);
+  }
+
+  async balanceOf(_address: AddressLike): Promise<bigint> {
+    return this.contract.balanceOf(_address);
+  }
+
+  async allowance(owner: AddressLike, spender: AddressLike): Promise<bigint> {
+    return this.contract.allowance(owner, spender);
+  }
+
+  async bondingAllowance(
+    _owner: AddressLike,
+    _caller: AddressLike
+  ): Promise<bigint> {
+    return this.contract.bondingAllowance(_owner, _caller);
+  }
+
+  async decimals(): Promise<bigint> {
+    return this.contract.decimals();
+  }
+
+  async name(): Promise<string> {
+    return this.contract.name();
+  }
+
+  async symbol(): Promise<string> {
+    return this.contract.symbol();
+  }
+
+  async totalSupply(): Promise<bigint> {
+    return this.contract.totalSupply();
+  }
+
+  async circulatingSupply(): Promise<bigint> {
+    return this.contract.circulatingSupply();
+  }
+
+  async STANDARD_DECIMALS(): Promise<bigint> {
+    return this.contract.STANDARD_DECIMALS();
+  }
+
+  async STANDARD_SCALE_FACTOR(): Promise<bigint> {
+    return this.contract.STANDARD_SCALE_FACTOR();
+  }
+
+  async getBondingRequestByID(
+    _id: ethers.BigNumberish
+  ): Promise<AutonityTypes.BondingRequest> {
+    const bondingRequest = await this.contract.getBondingRequestByID(_id);
+    return AutonityTypes.mapBondingRequest(bondingRequest);
+  }
+
+  async getUnbondingRequestByID(
+    _id: ethers.BigNumberish
+  ): Promise<AutonityTypes.UnbondingRequest> {
+    const unbondingRequest = await this.contract.getUnbondingRequestByID(_id);
+    return AutonityTypes.mapUnbondingRequest(unbondingRequest);
+  }
+
+  async getConfig(): Promise<AutonityTypes.AutonityConfig> {
+    const config = await this.contract.getConfig();
+    return AutonityTypes.mapAutonityConfig(config);
+  }
+
+  async getVersion(): Promise<bigint> {
+    return this.contract.getVersion();
+  }
+
+  async getCurrentCommitteeSize(): Promise<bigint> {
+    return this.contract.getCurrentCommitteeSize();
+  }
+
+  async getEpochID(): Promise<bigint> {
+    return this.contract.getEpochID();
+  }
+
+  async getEpochInfo(): Promise<AutonityTypes.EpochInfo> {
+    const epochInfo = await this.contract.getEpochInfo();
+    return AutonityTypes.mapEpochInfo(epochInfo);
+  }
+
+  async getEpochByHeight(
+    _height: ethers.BigNumberish
+  ): Promise<AutonityTypes.EpochInfo> {
+    const epochInfo = await this.contract.getEpochByHeight(_height);
+    return AutonityTypes.mapEpochInfo(epochInfo);
+  }
+
+  async getEpochTotalBondedStake(): Promise<bigint> {
+    return this.contract.getEpochTotalBondedStake();
+  }
+
+  async getEpochFromBlock(_block: ethers.BigNumberish): Promise<bigint> {
+    return this.contract.getEpochFromBlock(_block);
+  }
+
+  async getEpochPeriod(): Promise<bigint> {
+    return this.contract.getEpochPeriod();
+  }
+
+  async getCurrentEpochPeriod(): Promise<bigint> {
+    return this.contract.getCurrentEpochPeriod();
+  }
+
+  async getLastEpochBlock(): Promise<bigint> {
+    return this.contract.getLastEpochBlock();
+  }
+
+  async getLastEpochTime(): Promise<bigint> {
+    return this.contract.getLastEpochTime();
+  }
+
+  async getNextEpochBlock(): Promise<bigint> {
+    return this.contract.getNextEpochBlock();
+  }
+
+  async getClientConfig(): Promise<AutonityTypes.ClientConfig> {
+    const config = await this.contract.getClientConfig();
+    return AutonityTypes.mapClientConfig(config);
+  }
+
+  async getCommittee(): Promise<AutonityTypes.Committee[]> {
+    const committee = await this.contract.getCommittee();
+    return committee.map(AutonityTypes.mapCommittee);
+  }
+
+  async getCommitteeEnodes(): Promise<string[]> {
+    return this.contract.getCommitteeEnodes();
+  }
+
+  async getMaxCommitteeSize(): Promise<bigint> {
+    return this.contract.getMaxCommitteeSize();
+  }
+
+  async getBlockPeriod(): Promise<bigint> {
+    return this.contract.getBlockPeriod();
+  }
+
+  async getMinimumBaseFee(): Promise<bigint> {
+    return this.contract.getMinimumBaseFee();
+  }
+
+  async getUnbondingPeriod(): Promise<bigint> {
+    return this.contract.getUnbondingPeriod();
+  }
+
+  async getMaxScheduleDuration(): Promise<bigint> {
+    return this.contract.getMaxScheduleDuration();
+  }
+
+  async getTreasuryAccount(): Promise<string> {
+    return this.contract.getTreasuryAccount();
+  }
+
+  async getTreasuryFee(): Promise<bigint> {
+    return this.contract.getTreasuryFee();
+  }
+
+  async getInflationReserve(): Promise<bigint> {
+    return this.contract.getInflationReserve();
+  }
+
+  async getOperator(): Promise<string> {
+    return this.contract.getOperator();
+  }
+
+  async getOracle(): Promise<string> {
+    return this.contract.getOracle();
+  }
+
+  async getSlasher(): Promise<string> {
+    return this.contract.getSlasher();
+  }
+
+  async getLiquidLogicContract(): Promise<string> {
+    return this.contract.getLiquidLogicContract();
+  }
+
+  async getNewContract(): Promise<[string, string]> {
+    return this.contract.getNewContract();
+  }
+
+  async getSchedule(
+    vault: AddressLike,
+    id: ethers.BigNumberish
+  ): Promise<AutonityTypes.Schedule> {
+    const schedule = await this.contract.getSchedule(vault, id);
+    return AutonityTypes.mapSchedule(schedule);
+  }
+
+  async getTotalSchedules(vault: AddressLike): Promise<bigint> {
+    return this.contract.getTotalSchedules(vault);
+  }
+
+  async getValidator(addr: AddressLike): Promise<AutonityTypes.Validator> {
+    const validator = await this.contract.getValidator(addr);
+    return AutonityTypes.mapValidator(validator);
+  }
+
+  async getValidators(): Promise<string[]> {
+    return this.contract.getValidators();
+  }
+
+  async getValidatorState(addr: AddressLike): Promise<bigint> {
+    return this.contract.getValidatorState(addr);
+  }
+
+  async getUnbondingShare(unbondingID: ethers.BigNumberish): Promise<bigint> {
+    return this.contract.getUnbondingShare(unbondingID);
+  }
+
+  async isUnbondingReleased(
+    unbondingID: ethers.BigNumberish
+  ): Promise<boolean> {
+    return this.contract.isUnbondingReleased(unbondingID);
+  }
+}

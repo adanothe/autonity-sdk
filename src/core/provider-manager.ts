@@ -21,14 +21,12 @@ export class ProviderManager {
   private initializeProvider(config: ProviderConfig): ethers.Provider {
   const { rpcUrl, provider } = config;
 
-  // Kalau user kasih provider langsung
   if (provider) {
     this.validateProvider(provider);
     this._shouldDisposeProvider = false;
     return provider;
   }
 
-  // Kalau user kasih rpcUrl
   if (rpcUrl) {
     this.validateRpcUrl(rpcUrl);
     try {
@@ -64,7 +62,6 @@ export class ProviderManager {
       throw new ValidationError("Invalid rpcUrl: must be a non-empty string", "rpcUrl");
     }
 
-    // Basic URL validation
     try {
       new URL(rpcUrl);
     } catch (error) {
