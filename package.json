@@ -33,10 +33,18 @@
   },
   "typesVersions": {
     "*": {
-      "types": ["./dist/types/index.d.ts"],
-      "contracts": ["./dist/contracts/index.d.ts"],
-      "core": ["./dist/core/index.d.ts"],
-      "typechain": ["./dist/typechain/index.d.ts"]
+      "types": [
+        "./dist/types/index.d.ts"
+      ],
+      "contracts": [
+        "./dist/contracts/index.d.ts"
+      ],
+      "core": [
+        "./dist/core/index.d.ts"
+      ],
+      "typechain": [
+        "./dist/typechain/index.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -72,7 +80,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/adanothe/autonity-sdk.git"
+    "url": "git+https://github.com/adanothe/autonity-sdk.git"
   },
   "homepage": "https://github.com/adanothe/autonity-sdk#readme",
   "peerDependencies": {
