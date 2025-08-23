@@ -1,4 +1,4 @@
-import type { Autonity, IScheduleController, IAutonity } from "../typechain";
+import type { IScheduleController, IAutonity } from "../typechain/Autonity";
 
 export namespace AutonityTypes {
   // Internal type aliases for typechain outputs

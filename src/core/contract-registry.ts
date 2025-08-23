@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { AutonityClient, OracleClient } from "../contracts";
+import { AutonityClient, OracleClient, AuctioneerClient } from "../contracts";
 import { ContractError, ValidationError } from "./errors";
 import { ValidationUtils } from "./validation-utils";
 
@@ -32,6 +32,10 @@ const DEFAULT_CONTRACTS: ContractDefinition[] = [
   {
     name: "oracle",
     clientClass: OracleClient as ContractClientConstructor<OracleClient>,
+  },
+  {
+    name: "auctioneer",
+    clientClass: AuctioneerClient as ContractClientConstructor<AuctioneerClient>,
   },
 ];
 

@@ -3,3 +3,4 @@
 /* eslint-disable */
 export { Autonity__factory } from "./Autonity__factory";
 export { Oracle__factory } from "./Oracle__factory";
+export { Auctioneer__factory } from "./Auctioneer__factory";

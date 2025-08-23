@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import { AutonityClient } from "./autonity";
 import { OracleClient } from "./oracle";
+import { AuctioneerClient } from "./auctioneer";
 import {
   ProviderManager,
   WalletManager,
@@ -12,9 +13,11 @@ import {
 /**
  * Configuration interface for creating Contract instances.
  *
- * @interface ContractConfig
+ * Either `rpcUrl` or `provider` must be specified, but not both.
+ * Either `privateKey` or `signer` must be specified, but not both.
+ *
  * @example
- * ```typescript
+ * ```ts
  * const config: ContractConfig = {
  *   rpcUrl: "https://rpc.autonity.org",
  *   contractAddress: "0x1234567890123456789012345678901234567890",
@@ -23,52 +26,28 @@ import {
  * ```
  */
 export interface ContractConfig {
-  /**
-   * RPC URL for connecting to the blockchain network.
-   * Either rpcUrl or provider must be specified, but not both.
-   */
+  /** RPC URL for connecting to the blockchain network */
   rpcUrl?: string;
 
-  /**
-   * Pre-configured ethers Provider instance.
-   * Either rpcUrl or provider must be specified, but not both.
-   */
+  /** Pre-configured ethers Provider instance */
   provider?: ethers.Provider;
 
-  /**
-   * The contract address for both Autonity and Oracle contracts.
-   * Must be a valid Ethereum address.
-   */
+  /** The contract address for Autonity and Oracle contracts */
   contractAddress: string;
 
-  /**
-   * Private key for creating a wallet signer.
-   * Optional - either privateKey or signer can be specified, but not both.
-   */
+  /** Private key for creating a wallet signer */
   privateKey?: string;
 
-  /**
-   * Pre-configured ethers Signer instance.
-   * Optional - either privateKey or signer can be specified, but not both.
-   */
+  /** Pre-configured ethers Signer instance */
   signer?: ethers.Signer;
 }
 
 /**
- * Configuration validation utilities for Contract instances.
- * Contains static methods to validate different aspects of ContractConfig.
+ * Utility class for validating `ContractConfig`.
  *
- * @class ConfigValidator
- * @private
+ * @internal
  */
 class ConfigValidator {
-  /**
-   * Validates that either rpcUrl or provider is specified, but not both.
-   *
-   * @static
-   * @param {ContractConfig} config - The configuration to validate
-   * @throws {ValidationError} When validation fails
-   */
   static validateProviderConfig(config: ContractConfig): void {
     ValidationUtils.validateEitherOr(
       config,
@@ -77,39 +56,18 @@ class ConfigValidator {
     );
   }
 
-  /**
-   * Validates that the contract address is a valid Ethereum address.
-   *
-   * @static
-   * @param {ContractConfig} config - The configuration to validate
-   * @throws {ValidationError} When the address is invalid
-   */
   static validateContractAddress(config: ContractConfig): void {
     ValidationUtils.validateAddress(config.contractAddress, "contractAddress");
   }
 
-  /**
-   * Validates that privateKey and signer are not both specified.
-   *
-   * @static
-   * @param {ContractConfig} config - The configuration to validate
-   * @throws {ValidationError} When both privateKey and signer are provided
-   */
   static validateSignerConfig(config: ContractConfig): void {
     ValidationUtils.validateMutuallyExclusive(
       config,
       ["privateKey", "signer"],
-      "Cannot specify both 'privateKey' and 'signer', choose one"
+      "Cannot specify both 'privateKey' and 'signer'"
     );
   }
 
-  /**
-   * Performs complete validation of the configuration.
-   *
-   * @static
-   * @param {ContractConfig} config - The configuration to validate
-   * @throws {ValidationError} When any validation fails
-   */
   static validateAll(config: ContractConfig): void {
     this.validateProviderConfig(config);
     this.validateContractAddress(config);
@@ -118,25 +76,15 @@ class ConfigValidator {
 }
 
 /**
- * Main contract class that provides unified access to Autonity and Oracle contracts.
- * This class serves as the primary entry point for interacting with the Autonity blockchain,
- * handling provider management, wallet management, and contract instantiation.
+ * Main contract class providing unified access to Autonity and Oracle contracts.
  *
- * @class Contract
  * @example
- * ```typescript
+ * ```ts
  * // Using RPC URL and private key
  * const contract = new Contract({
  *   rpcUrl: "https://rpc.autonity.org",
  *   contractAddress: "0x1234567890123456789012345678901234567890",
  *   privateKey: "0xabcdef..."
- * });
- *
- * // Using existing provider and signer
- * const contract = new Contract({
- *   provider: existingProvider,
- *   contractAddress: "0x1234567890123456789012345678901234567890",
- *   signer: existingSigner
  * });
  *
  * // Access Autonity contract methods
@@ -147,70 +95,36 @@ class ConfigValidator {
  * ```
  */
 export class Contract {
-  /** The Autonity contract client instance */
+  /** Autonity contract client instance */
   public readonly autonity: AutonityClient;
 
-  /** The Oracle contract client instance */
+  /** Oracle contract client instance */
   public readonly oracle: OracleClient;
 
-  /** The underlying ethers Provider instance */
+  /** Auctioneer contract client instance */
+  public readonly auctioneer: AuctioneerClient;
+
+  /** Ethers provider instance */
   public readonly provider: ethers.Provider;
 
-  /** @private Provider management utility */
   private readonly providerManager: ProviderManager;
-
-  /** @private Wallet management utility */
   private readonly walletManager: WalletManager;
-
-  /** @private Contract registry for creating contract instances */
   private readonly contractRegistry: ContractRegistry;
 
   /**
-   * Static factory method to create a new Contract instance.
-   * This method is provided for consistency with async patterns,
-   * though the current implementation is synchronous.
+   * Creates a new Contract instance.
    *
-   * @static
-   * @param {ContractConfig} config - Configuration for the contract instance
-   * @returns {Promise<Contract>} A promise that resolves to a new Contract instance
-   * @example
-   * ```typescript
-   * const contract = await Contract.create({
-   *   rpcUrl: "https://rpc.autonity.org",
-   *   contractAddress: "0x1234567890123456789012345678901234567890",
-   *   privateKey: "0xabcdef..."
-   * });
-   * ```
-   */
-  static async create(config: ContractConfig): Promise<Contract> {
-    return new Contract(config);
-  }
-
-  /**
-   * Creates a new Contract instance with the provided configuration.
-   * Initializes all necessary managers and contract clients.
-   *
-   * @param {ContractConfig} config - Configuration for the contract instance
-   * @throws {ConfigurationError} When configuration is invalid or initialization fails
-   * @example
-   * ```typescript
-   * const contract = new Contract({
-   *   rpcUrl: "https://rpc.autonity.org",
-   *   contractAddress: "0x1234567890123456789012345678901234567890",
-   *   privateKey: "0xabcdef..."
-   * });
-   * ```
+   * @param config - Configuration for the contract
+   * @throws ConfigurationError When initialization fails
    */
   constructor(config: ContractConfig) {
     ConfigValidator.validateAll(config);
 
     try {
-      // Initialize core managers
       this.providerManager = new ProviderManager({
         rpcUrl: config.rpcUrl,
         provider: config.provider,
       });
-
       this.provider = this.providerManager.provider;
 
       this.walletManager = new WalletManager({
@@ -218,10 +132,8 @@ export class Contract {
         privateKey: config.privateKey,
         signer: config.signer,
       });
-
       this.contractRegistry = new ContractRegistry();
 
-      // Create contract instances using registry
       const signer = this.walletManager.signer;
       const address = config.contractAddress;
 
@@ -231,9 +143,14 @@ export class Contract {
         address,
         signer
       );
-
       this.oracle = this.contractRegistry.createContract<OracleClient>(
         "oracle",
+        this.provider,
+        address,
+        signer
+      );
+      this.auctioneer = this.contractRegistry.createContract<AuctioneerClient>(
+        "auctioneer",
         this.provider,
         address,
         signer
@@ -244,6 +161,16 @@ export class Contract {
         error instanceof Error ? error : undefined
       );
     }
+  }
+
+  /**
+   * Async factory method to create a new Contract instance.
+   *
+   * @param config - Contract configuration
+   * @returns A promise resolving to a new Contract
+   */
+  static async create(config: ContractConfig): Promise<Contract> {
+    return new Contract(config);
   }
 }
 

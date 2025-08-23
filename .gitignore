@@ -3,3 +3,5 @@ script
 dist
 test.ts
 /examples/
+*.bak
+abidoc

@@ -1,28 +1,40 @@
 import { Oracle, Oracle__factory, IOracle } from "../typechain";
 import { ethers, BigNumberish, AddressLike } from "ethers";
-import { OracleTypes } from "../type";
+import { OracleTypes, OracleEvents } from "../types";
 import { ContractClient } from "../core/contract-registry";
 
 /**
- * Autonity Protocol - Oracle Contract · kind: dev · version: 1
+ * Oracle contract client for interacting with the Autonity Protocol Oracle.
  *
- * Auto-generated from devdoc: oracle-doc.json
+ * Provides methods to read oracle configuration, rounds, reports, and voter information.
+ *
+ * @example
+ * ```ts
+ * const oracleClient = new OracleClient(provider, contractAddress, signer);
+ * const decimals = await oracleClient.getDecimals();
+ * const voters = await oracleClient.getVoters();
+ * ```
  */
 export class OracleClient implements ContractClient {
+  /** Underlying connected Oracle contract */
   private contract: Oracle;
 
+  /**
+   * Creates a new Oracle client instance.
+   *
+   * @param provider - ethers provider for blockchain connection
+   * @param contractAddress - address of the deployed Oracle contract
+   * @param signer - optional ethers signer for write operations
+   * @throws Error if provider or contractAddress is invalid
+   */
   constructor(
     provider: ethers.Provider,
     contractAddress: string,
     signer?: ethers.Signer
   ) {
-    if (!provider) {
-      throw new Error("Provider is required");
-    }
-
-    if (!contractAddress || !ethers.isAddress(contractAddress)) {
+    if (!provider) throw new Error("Provider is required");
+    if (!contractAddress || !ethers.isAddress(contractAddress))
       throw new Error("Invalid contract address");
-    }
 
     try {
       this.contract = signer
@@ -37,68 +49,200 @@ export class OracleClient implements ContractClient {
     }
   }
 
+  // event methods
+
   /**
-   * Binding for `getConfig` on the Oracle contract.
-   * @returns {Oracle.ConfigStruct} config, the current oracle config
+   * emitted when a call to an address fails in a protocol function (like finalize())
+   *
+   * @param startBlock - optional starting block number for event filtering
+   * @param endBlock - optional ending block number for event filtering
+   * @param to - optional address to filter events by recipient
    */
+  async CallFailed(
+    startBlock?: number,
+    endBlock?: number,
+    to?: AddressLike
+  ): Promise<OracleEvents.CallFailed[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.CallFailed(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map(OracleEvents.mapCallFailed);
+    return to ? mappedEvents.filter((event) => event.to === to) : mappedEvents;
+  }
+  /**
+   * Emitted when a participant submitted commit in the previous round but did not submit reveal in the current round.
+   * @param startBlock - optional starting block number for event filtering
+   * @param endBlock - optional ending block number for event filtering
+   * @param _voter - optional address to filter events by voter
+   */
+  async CommitRevealMissed(
+    startBlock?: number,
+    endBlock?: number,
+    _voter?: AddressLike
+  ): Promise<OracleEvents.CommitRevealMissed[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.CommitRevealMissed(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map((event) =>
+      OracleEvents.mapCommitRevealMissed(event)
+    );
+    return _voter
+      ? mappedEvents.filter((event) => event._voter === _voter)
+      : mappedEvents;
+  }
+
+  /**
+   * Emitted when a new voting round is started
+   * @param startBlock - optional starting block number for event filtering
+   * @param endBlock - optional ending block number for event filtering
+   * @param _round - optional round ID to filter events by
+   */
+  async NewRound(
+    startBlock?: number,
+    endBlock?: number,
+    _round?: bigint
+  ): Promise<OracleEvents.NewRound[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.NewRound(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map((event) =>
+      OracleEvents.mapNewRound(event)
+    );
+    return _round
+      ? mappedEvents.filter((event) => event._round === _round)
+      : mappedEvents;
+  }
+
+  /**
+   * Emitted when a valid report is accepted
+   * @param startBlock - optional starting block number for event filtering
+   * @param endBlock - optional ending block number for event filtering
+   * @param reporter - optional address to filter events by reporter
+   */
+  async SuccessfulVote(
+    startBlock?: number,
+    endBlock?: number,
+    reporter?: AddressLike
+  ): Promise<OracleEvents.SuccessfulVote[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.SuccessfulVote(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map((event) =>
+      OracleEvents.mapSuccessfulVote(event)
+    );
+    return reporter
+      ? mappedEvents.filter((event) => event.reporter === reporter)
+      : mappedEvents;
+  }
+  /**
+   * Emitted when an invalid report is submitted
+   * @param startBlock - optional starting block number for event filtering
+   * @param endBlock - optional ending block number for event filtering
+   * @param reporter - optional address to filter events by reporter
+   */
+  async InvalidVote(
+    startBlock?: number,
+    endBlock?: number,
+    reporter?: AddressLike
+  ): Promise<OracleEvents.InvalidVote[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.InvalidVote(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map((event) =>
+      OracleEvents.mapInvalidVote(event)
+    );
+    return reporter
+      ? mappedEvents.filter((event) => event.reporter === reporter)
+      : mappedEvents;
+  }
+  /**
+   * Emitted when a participant gets penalized for missing too many reveals in a certain window
+   * @param startBlock - optional starting block number for event filtering
+   * @param endBlock - optional ending block number for event filtering
+   * @param _voter - optional address to filter events by voter
+   */
+  async NoRevealPenalty(
+    startBlock?: number,
+    endBlock?: number,
+    _voter?: AddressLike
+  ): Promise<OracleEvents.NoRevealPenalty[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.NoRevealPenalty(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map((event) =>
+      OracleEvents.mapNoRevealPenalty(event)
+    );
+    return _voter
+      ? mappedEvents.filter((event) => event._voter === _voter)
+      : mappedEvents;
+  }
+
+  /**
+   * Emitted when a new price is calculated for a symbol
+   * @param startBlock - optional starting block number for event filtering
+   * @param endBlock - optional ending block number for event filtering
+   * @param price - optional price to filter events by price
+   */
+  async PriceUpdated(
+    startBlock?: number,
+    endBlock?: number,
+    price?: bigint
+  ): Promise<OracleEvents.PriceUpdated[]> {
+    const eventList = await this.contract.queryFilter(
+      this.contract.filters.PriceUpdated(),
+      startBlock,
+      endBlock
+    );
+    const mappedEvents = eventList.map((event) =>
+      OracleEvents.mapPriceUpdated(event)
+    );
+    return price
+      ? mappedEvents.filter((event) => event.price === price)
+      : mappedEvents;
+  }
+
+  /** Returns the current Oracle configuration */
   async getConfig(): Promise<Oracle.ConfigStruct> {
     const configData = await this.contract.getConfig();
     return OracleTypes.mapOracleConfig(configData);
   }
 
-  /**
-   * Binding for `getDecimals` on the Oracle contract.
-   *
-   * Decimal places to be used with price reports
-   *
-   * @returns {bigint} the number of decimal places
-   */
+  /** Returns the decimal places used for price reports */
   async getDecimals(): Promise<bigint> {
     return this.contract.getDecimals();
   }
 
-  /**
-   * Binding for `getNewVoters` on the Oracle contract.
-   *
-   * Retrieve the list of new participants in the Oracle process.
-   *
-   * @returns {Promise<string[]>} the list of new voters
-   */
+  /** Returns the list of new voters in the Oracle process */
   async getNewVoters(): Promise<string[]> {
     return this.contract.getNewVoters();
   }
 
-  /**
-   * Binding for `getNonRevealThreshold` on the Oracle contract.
-   *
-   * Returns the tolerance for missed reveal count before the voter gets punished.
-   * @returns {bigint} the non-reveal threshold
-   */
+  /** Returns the non-reveal threshold for voters */
   async getNonRevealThreshold(): Promise<bigint> {
     return this.contract.getNonRevealThreshold();
   }
 
-  /**
-   * Binding for `getRound` on the Oracle contract.
-   *
-   * Retrieve the current round ID.
-   *
-   * @returns {bigint} the current round ID
-   */
+  /** Returns the current round ID */
   async getRound(): Promise<bigint> {
     return this.contract.getRound();
   }
 
   /**
-   * Binding for `getRoundData` on the Oracle contract.
-   *
-   * Return price data for a specific round.
-   *
-   * IOracle interface method
-   * @param {BigNumberish} _round - the round for which the price should be returned.
-   * @param {string} _symbol - the symbol for which the current price should be returned.
-   *
-   * @returns {Promise<IOracle.RoundDataStruct>} the round data for the specified round and symbol
+   * Returns price data for a specific round and symbol.
+   * @param _round - round number
+   * @param _symbol - symbol for the price
    */
   async getRoundData(
     _round: BigNumberish,
@@ -109,21 +253,17 @@ export class OracleClient implements ContractClient {
   }
 
   /**
-   * Binding for `getRewardPeriodPerformance` on the Oracle contract.
-   *
-   * Retrieve the performance for a voter in this reward (epoch) period.
-   * @param {AddressLike} _voter - the voter address
-   * @returns {Promise<bigint>} the performance of the voter in the current reward
+   * Returns the performance of a voter in the current reward period
+   * @param _voter - voter address
    */
   async getRewardPeriodPerformance(_voter: AddressLike): Promise<bigint> {
     return this.contract.getRewardPeriodPerformance(_voter);
   }
 
   /**
-   * Binding for `getReports` on the Oracle contract.
-   * @param {string} _symbol - the target symbol
-   * @param {AddressLike} _voter - the target voter address
-   * @returns {OracleTypes.Report} the latest report of that voter for that symbol
+   * Returns the latest report for a voter and symbol
+   * @param _symbol - target symbol
+   * @param _voter - target voter address
    */
   async getReports(
     _symbol: string,
@@ -133,101 +273,54 @@ export class OracleClient implements ContractClient {
     return OracleTypes.mapReport(reports);
   }
 
-  /**
-   * Binding for `getSymbols` on the Oracle contract.
-   *
-   * Retrieve the lists of symbols to be voted on.
-   * @returns {Promise<string[]>} the list of symbols
-   */
+  /** Returns the list of symbols to be voted on */
   async getSymbols(): Promise<string[]> {
     return this.contract.getSymbols();
   }
 
-  /**
-   * Binding for `getSymbolUpdatedRound` on the Oracle contract.
-   * @returns {bigint} the round at which the symbols got updated
-   */
+  /** Returns the round when symbols were last updated */
   async getSymbolUpdatedRound(): Promise<bigint> {
     return this.contract.getSymbolUpdatedRound();
   }
 
-  /**
-   * Binding for `getVotePeriod` on the Oracle contract.
-   *
-   * Retrieve the vote period.
-   *
-   * @returns {Promise<bigint>} the current vote period
-   */
+  /** Returns the current vote period */
   async getVotePeriod(): Promise<bigint> {
     return this.contract.getVotePeriod();
   }
 
-  /**
-   * Binding for `getVoters` on the Oracle contract.
-   *
-   * Retrieve the list of participants in the Oracle process.
-   *
-   * @returns {Promise<string[]>} the list of voters
-   */
+  /** Returns the list of current voters */
   async getVoters(): Promise<string[]> {
     return this.contract.getVoters();
   }
 
-  /**
-   * Binding for `getLastRoundBlock` on the Oracle contract.
-   * @returns {bigint} the block at which the last completed round ended
-   */
+  /** Returns the block number of the last completed round */
   async getLastRoundBlock(): Promise<bigint> {
     return this.contract.getLastRoundBlock();
   }
 
-  /**
-   * Binding for `getNewVotePeriod` on the Oracle contract.
-   *
-   * Retrieve the new vote period that is going to be applied at the end of the vote round.
-   *
-   * @returns {Promise<bigint>} the new vote period
-   */
+  /** Returns the upcoming vote period */
   async getNewVotePeriod(): Promise<bigint> {
     return this.contract.getNewVotePeriod();
   }
 
-  /**
-   * Binding for `getLatestRoundData` on the Oracle contract.
-   *
-   * Return latest available price data.
-   * @param {string} _symbol - the symbol from which the current price should be returned.
-   * @return {Promise<IOracle.RoundDataStruct>} the latest round data for the specified symbol
-   */
+  /** Returns the latest round data for a symbol */
   async getLatestRoundData(_symbol: string): Promise<IOracle.RoundDataStruct> {
     const roundData = await this.contract.latestRoundData(_symbol);
     return OracleTypes.mapRoundData(roundData);
   }
 
-  /**
-   * Binding for `getVoterInfo` on the Oracle contract.
-   * @param {AddressLike} _voter - the voter address
-   * @returns {OracleTypes.VoterInfo} the related voter information
-   */
+  /** Returns voter info for a given address */
   async getVoterInfo(_voter: AddressLike): Promise<OracleTypes.VoterInfo> {
     const voter = await this.contract.getVoterInfo(_voter);
     return OracleTypes.mapVoterInfo(voter);
   }
 
-  /**
-   * Binding for `getVoterTreasuries` on the Oracle contract.
-   * @param {AddressLike} _oracleAddress - the oracle address of a validator
-   * @returns {string} this treasury address
-   */
+  /** Returns treasury address for a given validator */
   async getVoterTreasuries(_oracleAddress: AddressLike): Promise<string> {
     return this.contract.getVoterTreasuries(_oracleAddress);
   }
 
-  /**
-   * Binding for `getVoterValidators` on the Oracle contract.
-   * @param {AddressLike} _oracleAddress - the oracle address of a validator
-   * @returns {string} this node address
-   */
+  /** Returns node address for a given validator */
   async getVoterValidators(_oracleAddress: AddressLike): Promise<string> {
     return this.contract.getVoterValidators(_oracleAddress);
   }
