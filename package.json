@@ -82,7 +82,10 @@
     "type": "git",
     "url": "git+https://github.com/adanothe/autonity-sdk.git"
   },
-  "homepage": "https://github.com/adanothe/autonity-sdk#readme",
+  "bugs": {
+    "url": "https://github.com/adanothe/autonity-sdk/issues"
+  },
+  "homepage": "https://adanothe.github.io/autonity-sdk/",
   "peerDependencies": {
     "ethers": "^6.13.2"
   },
