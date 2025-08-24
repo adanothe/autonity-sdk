@@ -1,5 +1,5 @@
 export { AutonityClient, OracleClient, Contract, ContractConfig } from "./contracts";
-export { OracleTypes, AutonityTypes, AutonityEvents } from "./types";
+export { OracleTypes, AutonityTypes, AutonityEvents, OracleEvents } from "./types";
 export { 
   Autonity, 
   Oracle, 

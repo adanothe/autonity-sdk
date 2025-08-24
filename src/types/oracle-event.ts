@@ -1,4 +1,4 @@
-import { BytesLike } from "ethers";
+import { BytesLike, Indexed, id } from "ethers";
 import type {
   CallFailedEvent,
   CommitRevealMissedEvent,
@@ -108,6 +108,7 @@ export namespace OracleEvents {
     symbol: string;
     status: boolean;
     timestamp: bigint;
+    
   }
 
   export interface ISuccessfulVote extends EventBase {
@@ -306,17 +307,19 @@ export namespace OracleEvents {
     transactionHash: event.transactionHash,
   });
 
-  export const mapPriceUpdated = (
-    event: PriceUpdatedEvent.Log
-  ): PriceUpdated => ({
+  export const mapPriceUpdated = (event: PriceUpdatedEvent.Log): PriceUpdated => {
+  const sym = normalizeSymbol(event.args.symbol as unknown as string | Indexed);
+
+  return {
     price: event.args.price,
     round: event.args.round,
-    symbol: event.args.symbol,
+    symbol: sym.hash,          
     status: event.args.status,
     timestamp: event.args.timestamp,
     blockNumber: event.blockNumber,
     transactionHash: event.transactionHash,
-  });
+  };
+};
 
   export const mapSuccessfulVote = (
     event: SuccessfulVoteEvent.Log
@@ -367,6 +370,12 @@ export namespace OracleEvents {
       "validator" in event
     );
   }
+
+  function normalizeSymbol(arg: string | Indexed): { hash: string; text?: string } {
+  if (typeof arg === "string") return { hash: id(arg), text: arg };
+  return { hash: arg.hash ?? "" };
+}
+
 
   // Helper function to check if an event is a price-related event
   export function isPriceEvent(event: OracleEvent): boolean {
