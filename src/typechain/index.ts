@@ -4,7 +4,9 @@
 export type { Autonity } from "./Autonity";
 export type { Oracle, IOracle } from "./Oracle";
 export type { Auctioneer } from "./Auctioneer";
+export type { Liquid } from "./Liquid";
 export * as factories from "./factories";
 export { Auctioneer__factory } from "./factories/Auctioneer__factory";
 export { Autonity__factory } from "./factories/Autonity__factory";
+export { Liquid__factory } from "./factories/Liquid__factory";
 export { Oracle__factory } from "./factories/Oracle__factory";

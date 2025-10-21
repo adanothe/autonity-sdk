@@ -2,6 +2,7 @@ import { ethers } from "ethers";
 import { AutonityClient } from "./autonity";
 import { OracleClient } from "./oracle";
 import { AuctioneerClient } from "./auctioneer";
+import { LiquidClient } from "./liquid";
 import {
   ProviderManager,
   WalletManager,
@@ -104,6 +105,9 @@ export class Contract {
   /** Auctioneer contract client instance */
   public readonly auctioneer: AuctioneerClient;
 
+  /** Liquid contract client instance */
+  public readonly liquid: LiquidClient;
+
   /** Ethers provider instance */
   public readonly provider: ethers.Provider;
 
@@ -151,6 +155,12 @@ export class Contract {
       );
       this.auctioneer = this.contractRegistry.createContract<AuctioneerClient>(
         "auctioneer",
+        this.provider,
+        address,
+        signer
+      );
+      this.liquid = this.contractRegistry.createContract<LiquidClient>(
+        "liquid",
         this.provider,
         address,
         signer

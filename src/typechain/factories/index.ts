@@ -4,3 +4,4 @@
 export { Autonity__factory } from "./Autonity__factory";
 export { Oracle__factory } from "./Oracle__factory";
 export { Auctioneer__factory } from "./Auctioneer__factory";
+export { Liquid__factory } from "./Liquid__factory";

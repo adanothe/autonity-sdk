@@ -293,7 +293,7 @@ export namespace AutonityEvents {
     Transfer: typeof mapTransfer;
   }
 
-  function createEventMapper<T extends readonly unknown[], R>(
+  export function createEventMapper<T extends readonly unknown[], R>(
     mapper: (struct: T, blockNumber: number, transactionHash: string) => R
   ) {
     return mapper;
